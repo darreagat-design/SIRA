@@ -139,8 +139,8 @@ export default function DashboardPage() {
       <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
         <AppHeader
           userName={user.nombre}
-          title="Dashboard académico"
-          subtitle="Revisa el estado general del sistema, explora los espacios activos y continua al flujo de reserva desde un panel ordenado y presentable."
+          title="Dashboard académico" subtitle=" "
+         
           onLogout={handleLogout}
           currentPath="dashboard"
         />
@@ -163,7 +163,7 @@ export default function DashboardPage() {
 
           <DashboardCard
             eyebrow="Nueva reserva"
-            title="Flujo listo"
+            title="Fácil y Rápido"
             description="Consulta disponibilidad, revisa el espacio ideal y registra la reserva desde la siguiente pantalla."
             accent="slate"
             action={
