@@ -1,26 +1,10 @@
-# SIRA - Sistema Inteligente de Reservas Académicas
+# SIRA - Sprint 1
 
-SIRA es una aplicación web mínima para la gestión de reservas de espacios académicos, como salones, laboratorios y auditorios.
+Base tecnica inicial de SIRA (Sistema Inteligente de Reservas Academicas).
 
-El objetivo del proyecto es permitir el registro de usuarios, la consulta de disponibilidad y la creación de reservas, evitando conflictos de horario y mejorando la organización de los espacios dentro de una institución educativa.
+Este sprint solo prepara el entorno de desarrollo con Next.js, TypeScript, Tailwind CSS, Prisma ORM, PostgreSQL y Docker Compose. No incluye entidades finales del negocio, autenticacion, endpoints funcionales ni pantallas completas.
 
-## Objetivo académico
-
-Este proyecto fue desarrollado como parte de una tarea de diseño y construcción del núcleo de un sistema de reservas académicas, cubriendo análisis, diseño e implementación técnica inicial.
-
-## Alcance del MVP
-
-La primera versión del sistema incluirá:
-
-- Registro de usuarios
-- Inicio de sesión básico
-- Consulta de espacios
-- Consulta de disponibilidad por fecha y horario
-- Creación de reservas
-- Validación para evitar doble reserva
-- Interfaz web mínima con pantallas de login, dashboard y reserva
-
-## Stack tecnológico
+## Stack
 
 - Next.js
 - TypeScript
@@ -29,74 +13,63 @@ La primera versión del sistema incluirá:
 - PostgreSQL
 - Docker Compose
 
-## Entidades principales
+## Estructura base
 
-- Usuario
-- Espacio
-- Reserva
+```text
+.
+|- docker-compose.yml
+|- .env.example
+|- prisma/
+|  |- schema.prisma
+|- src/
+|  |- app/
+|  |- components/
+|  |- lib/
+|     |- prisma.ts
+```
 
-## Endpoints planeados
+## Levantar el entorno local
 
-- `POST /api/usuarios/register`
-- `POST /api/auth/login`
-- `GET /api/espacios`
-- `GET /api/disponibilidad`
-- `POST /api/reservas`
+1. Instala las dependencias:
 
-## Reglas principales del negocio
+```bash
+npm install
+```
 
-- Un usuario debe estar registrado para reservar.
-- Un espacio no puede reservarse dos veces en horarios traslapados el mismo día.
-- La hora de inicio debe ser menor que la hora de fin.
-- No se pueden crear reservas sobre espacios inactivos.
+2. Crea tu archivo de entorno a partir del ejemplo:
 
-## Estructura del trabajo por sprints
+```bash
+cp .env.example .env
+```
 
-### Sprint 0
-- Análisis del problema
-- Requerimientos funcionales y no funcionales
-- Preguntas al cliente
-- Wireframes
-- Modelo de datos
-- Planeación técnica
-- Backlog de sprints
+En Windows PowerShell puedes usar:
 
-### Sprint 1
-- Scaffold del proyecto con Next.js
-- Configuración de Prisma
-- Configuración de PostgreSQL con Docker Compose
-- Variables de entorno iniciales
-- Conexión base a la BD
+```powershell
+Copy-Item .env.example .env
+```
 
-### Sprint 2
-- Modelado de entidades en Prisma
-- Migraciones
-- Seed de espacios iniciales
+3. Levanta PostgreSQL con Docker Compose:
 
-### Sprint 3
-- Implementación de API
-- Registro
-- Login
-- Consulta de espacios
-- Disponibilidad
-- Creación de reservas
+```bash
+docker compose up -d
+```
 
-### Sprint 4
-- Construcción de interfaz
-- Login
-- Dashboard
-- Reserva
+4. Verifica la configuracion de Prisma y genera el cliente:
 
-### Sprint 5
-- Pulido final
-- Documentación
-- Validación del flujo completo
-- Preparación para entrega
+```bash
+npx prisma validate
+npx prisma generate
+```
 
-## Estado actual
+5. Inicia el proyecto en desarrollo:
 
-Proyecto en fase de planeación y configuración inicial.
+```bash
+npm run dev
+```
 
-## Autor
+## Notas del Sprint 1
 
-Proyecto académico desarrollado para la construcción de un software mínimo de reservas académicas.
+- `prisma/schema.prisma` solo deja configurada la conexion a PostgreSQL.
+- Las entidades `Usuario`, `Espacio` y `Reserva` se modelaran en el siguiente sprint.
+- `src/lib/prisma.ts` centraliza la instancia reusable de Prisma Client.
+- `docker-compose.yml` solo levanta PostgreSQL para desarrollo local.
