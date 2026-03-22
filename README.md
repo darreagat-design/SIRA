@@ -1,8 +1,8 @@
-# SIRA - Sprint 3
+# SIRA - Sprint 4
 
-API base del MVP de SIRA (Sistema Inteligente de Reservas Academicas).
+Interfaz web minima del MVP de SIRA (Sistema Inteligente de Reservas Academicas).
 
-Este sprint incorpora endpoints con Next.js App Router para registro de usuarios, login, consulta de espacios activos, consulta de disponibilidad y creacion de reservas. La validacion se realiza con Zod y las contrasenas se almacenan con hash usando bcrypt. No incluye JWT, cookies, middleware de autenticacion ni pantallas funcionales completas.
+Este sprint incorpora las pantallas de login, registro, dashboard y reserva, todas conectadas con la API construida en el sprint anterior. La sesion se maneja de forma simple con `sessionStorage`, sin JWT, cookies ni middleware avanzado.
 
 ## Stack
 
@@ -47,35 +47,44 @@ docker compose up -d
 npx prisma migrate dev
 ```
 
-5. Genera Prisma Client:
-
-```bash
-npx prisma generate
-```
-
-6. Carga el seed de espacios academicos:
+5. Carga el seed de espacios academicos:
 
 ```bash
 npx prisma db seed
 ```
 
-7. Inicia el proyecto:
+6. Inicia el proyecto:
 
 ```bash
 npm run dev
 ```
 
-## Endpoints disponibles en Sprint 3
+## Flujo basico del Sprint 4
+
+1. Entra a `/register` y crea un usuario.
+2. Ve a `/login` e inicia sesion.
+3. Al entrar, se guardan los datos basicos del usuario en `sessionStorage`.
+4. En `/dashboard` veras el panel principal y los espacios activos.
+5. En `/reserva` puedes consultar disponibilidad y crear una reserva.
+
+## Pantallas disponibles
+
+- `/`
+- `/login`
+- `/register`
+- `/dashboard`
+- `/reserva`
+
+## Endpoints usados por la UI
 
 - `POST /api/usuarios/register`
 - `POST /api/auth/login`
 - `GET /api/espacios`
-- `GET /api/disponibilidad?fecha=2026-03-25&horaInicio=09:00&horaFin=11:00`
+- `GET /api/disponibilidad`
 - `POST /api/reservas`
 
 ## Notas
 
-- La API espera horas en formato `HH:mm`.
-- La fecha para disponibilidad y reservas usa el formato `YYYY-MM-DD`.
+- La UI hace una verificacion simple del lado cliente para redirigir a `/login` si no hay usuario en `sessionStorage`.
 - El contenedor PostgreSQL usa el puerto `5433` para evitar conflictos con instalaciones locales en `5432`.
-- Este sprint deja la base lista para construir la interfaz en el Sprint 4.
+- Este sprint deja el proyecto listo para pruebas finales y pulido, sin avanzar al Sprint 5.
