@@ -117,13 +117,9 @@ export default function LoginPage() {
       badge="Acceso"
       title="Inicia sesion en SIRA"
       description="Accede al panel para consultar espacios, revisar disponibilidad y crear reservas academicas."
-      asideTitle="Gestion de reservas con una experiencia clara y academica."
-      asideDescription="SIRA concentra el flujo minimo del MVP en una interfaz limpia para demostraciones, pruebas y evolucion del proyecto."
-      asidePoints={[
-        "Consulta espacios activos ordenados y listos para reservar.",
-        "Valida disponibilidad antes de apartar un salon, laboratorio o auditorio.",
-        "Trabaja con una experiencia sobria, seria y facil de presentar en clase.",
-      ]}
+      asideTitle="Acceso al sistema"
+      asideDescription="Ingresa con tu usuario para continuar al dashboard de reservas academicas."
+      asidePoints={[]}
       footerText="Aun no tienes cuenta?"
       footerLinkLabel="Registrate aqui"
       footerHref="/register"

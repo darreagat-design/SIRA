@@ -1,10 +1,12 @@
-# SIRA - Sprint 4
+# SIRA - Sistema Inteligente de Reservas Academicas
 
-Interfaz web minima del MVP de SIRA (Sistema Inteligente de Reservas Academicas).
+Aplicacion web academica para gestionar reservas de salones, laboratorios y auditorios.
 
-Este sprint incorpora las pantallas de login, registro, dashboard y reserva, todas conectadas con la API construida en el sprint anterior. La sesion se maneja de forma simple con `sessionStorage`, sin JWT, cookies ni middleware avanzado.
+## Objetivo academico
 
-## Stack
+SIRA fue desarrollado como proyecto academico para demostrar el ciclo completo de analisis, configuracion tecnica, persistencia, API e interfaz web de un sistema minimo de reservas academicas.
+
+## Stack tecnologico
 
 - Next.js App Router
 - TypeScript
@@ -15,76 +17,116 @@ Este sprint incorpora las pantallas de login, registro, dashboard y reserva, tod
 - Zod
 - bcrypt
 
-## Levantar el entorno local
+## Requisitos previos
 
-1. Instala las dependencias:
+- Node.js 20 o superior
+- npm
+- Docker Desktop o Docker Engine con Docker Compose
 
-```bash
-npm install
+## Variables de entorno necesarias
+
+Crea un archivo `.env` a partir de `.env.example` con estas variables:
+
+```env
+POSTGRES_DB=sira_db
+POSTGRES_USER=sira_user
+POSTGRES_PASSWORD=sira_password
+POSTGRES_PORT=5433
+DATABASE_URL="postgresql://sira_user:sira_password@localhost:5433/sira_db?schema=public"
 ```
 
-2. Crea tu archivo de entorno:
-
-```bash
-cp .env.example .env
-```
-
-En Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-3. Levanta PostgreSQL:
+## Levantar PostgreSQL con Docker Compose
 
 ```bash
 docker compose up -d
 ```
 
-4. Ejecuta migraciones:
+## Instalar dependencias
+
+```bash
+npm install
+```
+
+## Ejecutar migraciones de Prisma
 
 ```bash
 npx prisma migrate dev
 ```
 
-5. Carga el seed de espacios academicos:
+## Ejecutar el seed
 
 ```bash
 npx prisma db seed
 ```
 
-6. Inicia el proyecto:
+## Correr el proyecto en desarrollo
 
 ```bash
 npm run dev
 ```
 
-## Flujo basico del Sprint 4
+Abre la aplicacion en el navegador en:
 
-1. Entra a `/register` y crea un usuario.
-2. Ve a `/login` e inicia sesion.
-3. Al entrar, se guardan los datos basicos del usuario en `sessionStorage`.
-4. En `/dashboard` veras el panel principal y los espacios activos.
-5. En `/reserva` puedes consultar disponibilidad y crear una reserva.
+```text
+http://localhost:3001/
+```
 
-## Pantallas disponibles
-
-- `/`
-- `/login`
-- `/register`
-- `/dashboard`
-- `/reserva`
-
-## Endpoints usados por la UI
+## Endpoints disponibles
 
 - `POST /api/usuarios/register`
 - `POST /api/auth/login`
 - `GET /api/espacios`
 - `GET /api/disponibilidad`
 - `POST /api/reservas`
+- `GET /api/mis-reservas?usuarioId=...`
 
-## Notas
+## Flujo basico de uso
 
-- La UI hace una verificacion simple del lado cliente para redirigir a `/login` si no hay usuario en `sessionStorage`.
-- El contenedor PostgreSQL usa el puerto `5433` para evitar conflictos con instalaciones locales en `5432`.
-- Este sprint deja el proyecto listo para pruebas finales y pulido, sin avanzar al Sprint 5.
+1. Registrar un usuario desde `/register`.
+2. Iniciar sesion desde `/login`.
+3. Entrar al dashboard y revisar espacios activos junto con las reservas registradas del usuario autenticado.
+4. Ir a `/reserva`.
+5. Consultar disponibilidad por fecha y horario.
+6. Crear una reserva valida.
+7. Cerrar sesion desde el encabezado.
+
+## Estructura general del proyecto
+
+```text
+.
+|- docker-compose.yml
+|- prisma/
+|  |- migrations/
+|  |- schema.prisma
+|  |- seed.ts
+|- src/
+|  |- app/
+|  |  |- api/
+|  |  |- dashboard/
+|  |  |- login/
+|  |  |- register/
+|  |  |- reserva/
+|  |- components/
+|  |- lib/
+|- README.md
+```
+
+## Pruebas manuales sugeridas
+
+- Registrar un usuario nuevo desde la UI.
+- Intentar registrar un correo repetido.
+- Iniciar sesion con credenciales correctas.
+- Intentar login con password incorrecta.
+- Listar espacios activos en el dashboard.
+- Ver reservas registradas del usuario dentro del dashboard.
+- Consultar disponibilidad para una fecha y un rango horario.
+- Crear una reserva valida.
+- Intentar crear una reserva traslapada para verificar el conflicto.
+- Verificar que `/dashboard` y `/reserva` redirigen a `/login` cuando no hay usuario en `sessionStorage`.
+
+## Notas finales
+
+- La sesion se maneja de forma simple con `sessionStorage`.
+- No se usa JWT, cookies ni middleware complejo.
+- PostgreSQL usa el puerto `5433` para evitar conflictos con instalaciones locales en `5432`.
+- El proyecto queda listo para pruebas manuales, demostracion y defensa en clase.

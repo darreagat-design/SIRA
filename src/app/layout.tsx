@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SIRA | Sprint 4",
-  description: "Interfaz web del MVP para reservas academicas conectada con la API existente.",
+  title: "SIRA | Version Final",
+  description: "Sistema academico de reservas con frontend, API y persistencia listos para demostracion.",
 };
 
 export default function RootLayout({

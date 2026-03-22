@@ -42,16 +42,18 @@ export function AuthCard({
               {asideDescription}
             </p>
 
-            <div className="mt-10 grid gap-4">
-              {asidePoints.map((point) => (
-                <div
-                  key={point}
-                  className="rounded-2xl border border-white/15 bg-white/8 px-4 py-4 backdrop-blur"
-                >
-                  <p className="text-sm leading-6 text-slate-100">{point}</p>
-                </div>
-              ))}
-            </div>
+            {asidePoints.length ? (
+              <div className="mt-10 grid gap-4">
+                {asidePoints.map((point) => (
+                  <div
+                    key={point}
+                    className="rounded-2xl border border-white/15 bg-white/8 px-4 py-4 backdrop-blur"
+                  >
+                    <p className="text-sm leading-6 text-slate-100">{point}</p>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
         </div>
 
