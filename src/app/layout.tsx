@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SIRA | Sprint 1",
-  description: "Base tecnica inicial del Sistema Inteligente de Reservas Academicas.",
+  title: "SIRA | Sprint 2",
+  description: "Capa de persistencia inicial del Sistema Inteligente de Reservas Academicas.",
 };
 
 export default function RootLayout({

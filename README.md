@@ -1,8 +1,8 @@
-# SIRA - Sprint 1
+# SIRA - Sprint 2
 
-Base tecnica inicial de SIRA (Sistema Inteligente de Reservas Academicas).
+Base tecnica y capa de persistencia inicial de SIRA (Sistema Inteligente de Reservas Academicas).
 
-Este sprint solo prepara el entorno de desarrollo con Next.js, TypeScript, Tailwind CSS, Prisma ORM, PostgreSQL y Docker Compose. No incluye entidades finales del negocio, autenticacion, endpoints funcionales ni pantallas completas.
+Este sprint deja modeladas las entidades principales del sistema con Prisma, la migracion inicial de base de datos y un seed con espacios academicos de ejemplo. No incluye endpoints funcionales, autenticacion ni pantallas de negocio.
 
 ## Stack
 
@@ -20,7 +20,9 @@ Este sprint solo prepara el entorno de desarrollo con Next.js, TypeScript, Tailw
 |- docker-compose.yml
 |- .env.example
 |- prisma/
+|  |- migrations/
 |  |- schema.prisma
+|  |- seed.ts
 |- src/
 |  |- app/
 |  |- components/
@@ -36,13 +38,13 @@ Este sprint solo prepara el entorno de desarrollo con Next.js, TypeScript, Tailw
 npm install
 ```
 
-2. Crea tu archivo de entorno a partir del ejemplo:
+2. Crea tu archivo de entorno:
 
 ```bash
 cp .env.example .env
 ```
 
-En Windows PowerShell puedes usar:
+En Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
@@ -54,22 +56,48 @@ Copy-Item .env.example .env
 docker compose up -d
 ```
 
-4. Verifica la configuracion de Prisma y genera el cliente:
+4. Valida Prisma y genera el cliente:
 
 ```bash
 npx prisma validate
 npx prisma generate
 ```
 
-5. Inicia el proyecto en desarrollo:
+5. Crea o aplica la migracion inicial:
+
+```bash
+npx prisma migrate dev --name init
+```
+
+6. Ejecuta el seed de espacios academicos:
+
+```bash
+npx prisma db seed
+```
+
+Tambien puedes usar el script:
+
+```bash
+npm run db:seed
+```
+
+7. Inicia el proyecto en desarrollo:
 
 ```bash
 npm run dev
 ```
 
-## Notas del Sprint 1
+## Modelos incluidos en Sprint 2
 
-- `prisma/schema.prisma` solo deja configurada la conexion a PostgreSQL.
-- Las entidades `Usuario`, `Espacio` y `Reserva` se modelaran en el siguiente sprint.
-- `src/lib/prisma.ts` centraliza la instancia reusable de Prisma Client.
-- `docker-compose.yml` solo levanta PostgreSQL para desarrollo local.
+- `Usuario`
+- `Espacio`
+- `Reserva`
+
+## Notas del Sprint 2
+
+- `correo` en `Usuario` es unico.
+- `Espacio.activo` se modela como booleano.
+- `Reserva.estado` tiene valor por defecto `confirmada`.
+- `horaInicio` y `horaFin` se mantienen como `String` para este MVP.
+- El ejemplo usa el puerto `5433` para evitar conflictos con instalaciones locales de PostgreSQL en `5432`.
+- El seed crea espacios de ejemplo y deja la base lista para construir la API en el siguiente sprint.

@@ -9,6 +9,8 @@
     "lint": "eslint",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
+    "db:seed": "prisma db seed",
+    "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate"
   },
@@ -27,6 +29,10 @@
     "eslint-config-next": "16.2.1",
     "prisma": "^6.6.0",
     "tailwindcss": "^4",
+    "tsx": "^4.19.4",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }
