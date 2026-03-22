@@ -150,4 +150,3 @@ DATABASE_URL="postgresql://sira_user:sira_password@localhost:5433/sira_db?schema
 - La sesión se maneja de forma simple con `sessionStorage`.
 - No se usa JWT, cookies ni middleware complejo.
 - PostgreSQL usa el puerto `5433` para evitar conflictos con instalaciones locales en `5432`.
-- El proyecto está orientado a pruebas manuales, demostración académica y defensa en clase.
