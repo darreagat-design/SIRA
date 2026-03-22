@@ -81,6 +81,11 @@ export const misReservasQuerySchema = z.object({
   usuarioId: idSchema,
 });
 
+export const agendaEspacioQuerySchema = z.object({
+  espacioId: idSchema,
+  fecha: fechaSchema,
+});
+
 export function formatZodError(error: ZodError) {
   return error.issues.map((issue) => ({
     field: issue.path.join("."),

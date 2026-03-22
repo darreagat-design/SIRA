@@ -19,6 +19,27 @@ type Space = {
   activo: boolean;
 };
 
+type AgendaReservation = {
+  id: string;
+  horaInicio: string;
+  horaFin: string;
+  motivo: string;
+  estado: string;
+};
+
+type AgendaData = {
+  espacio: {
+    id: string;
+    nombre: string;
+    tipo: string;
+    ubicacion: string;
+    capacidad: number;
+    activo: boolean;
+  };
+  fecha: string;
+  reservas: AgendaReservation[];
+};
+
 type ApiResponse<T> = {
   ok: boolean;
   message: string;
@@ -33,11 +54,19 @@ function isValidTime(value: string) {
   return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value);
 }
 
+function formatAgendaDate(value: string) {
+  return new Intl.DateTimeFormat("es-GT", {
+    dateStyle: "full",
+    timeZone: "UTC",
+  }).format(new Date(`${value}T00:00:00Z`));
+}
+
 export default function ReservaPage() {
   const router = useRouter();
   const [user, setUser] = useState<SessionUser | null>(null);
   const [spaces, setSpaces] = useState<Space[]>([]);
   const [availableSpaces, setAvailableSpaces] = useState<Space[]>([]);
+  const [agendaData, setAgendaData] = useState<AgendaData | null>(null);
   const [selectedSpaceId, setSelectedSpaceId] = useState("");
   const [fecha, setFecha] = useState("");
   const [horaInicio, setHoraInicio] = useState("");
@@ -45,12 +74,51 @@ export default function ReservaPage() {
   const [motivo, setMotivo] = useState("");
   const [isLoadingSpaces, setIsLoadingSpaces] = useState(true);
   const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+  const [isLoadingAgenda, setIsLoadingAgenda] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [agendaError, setAgendaError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{
     tone: "success" | "error" | "info" | "warning";
     title: string;
     message: string;
   } | null>(null);
+
+  async function loadAgenda(spaceId: string, date: string) {
+    if (!spaceId || !isValidDate(date)) {
+      setAgendaData(null);
+      setAgendaError(null);
+      setIsLoadingAgenda(false);
+      return;
+    }
+
+    setIsLoadingAgenda(true);
+    setAgendaError(null);
+
+    try {
+      const params = new URLSearchParams({
+        espacioId: spaceId,
+        fecha: date,
+      });
+
+      const response = await fetch(`/api/agenda-espacio?${params.toString()}`, {
+        cache: "no-store",
+      });
+      const result = (await response.json()) as ApiResponse<AgendaData>;
+
+      if (!response.ok || !result.ok || !result.data) {
+        setAgendaData(null);
+        setAgendaError(result.message || "No fue posible obtener la agenda del espacio.");
+        return;
+      }
+
+      setAgendaData(result.data);
+    } catch {
+      setAgendaData(null);
+      setAgendaError("No fue posible obtener la agenda del espacio.");
+    } finally {
+      setIsLoadingAgenda(false);
+    }
+  }
 
   useEffect(() => {
     const storedUser = readSessionUser();
@@ -95,6 +163,17 @@ export default function ReservaPage() {
 
     void loadSpaces();
   }, [router]);
+
+  useEffect(() => {
+    if (!selectedSpaceId || !fecha) {
+      setAgendaData(null);
+      setAgendaError(null);
+      setIsLoadingAgenda(false);
+      return;
+    }
+
+    void loadAgenda(selectedSpaceId, fecha);
+  }, [selectedSpaceId, fecha]);
 
   function handleLogout() {
     clearSessionUser();
@@ -243,10 +322,10 @@ export default function ReservaPage() {
         message: "La reserva se registro correctamente en el sistema.",
       });
       setAvailableSpaces([]);
-      setFecha("");
       setHoraInicio("");
       setHoraFin("");
       setMotivo("");
+      await loadAgenda(selectedSpaceId, fecha);
     } catch {
       setFeedback({
         tone: "error",
@@ -290,7 +369,7 @@ export default function ReservaPage() {
           />
         ) : null}
 
-        <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
+        <section className="grid gap-6 xl:grid-cols-2">
           <article className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-[0_24px_80px_-40px_rgba(15,23,42,0.35)]">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
               Formulario
@@ -399,6 +478,83 @@ export default function ReservaPage() {
             </form>
           </article>
 
+          <article className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-[0_24px_80px_-40px_rgba(15,23,42,0.35)] xl:sticky xl:top-6 xl:self-start">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+              Agenda del dia
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">
+              Horario reservado del espacio
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">
+              Consulta visualmente los bloques ya ocupados del espacio seleccionado en la fecha elegida.
+            </p>
+
+            <div className="mt-6">
+              {!selectedSpaceId || !fecha ? (
+                <EmptyState
+                  title="Selecciona espacio y fecha"
+                  description="Elige un espacio y una fecha para ver la ocupacion diaria y las reservas ya registradas."
+                />
+              ) : isLoadingAgenda ? (
+                <div className="space-y-4">
+                  {[0, 1, 2].map((item) => (
+                    <div
+                      key={item}
+                      className="h-28 animate-pulse rounded-[1.75rem] border border-slate-200 bg-slate-100"
+                    />
+                  ))}
+                </div>
+              ) : agendaError ? (
+                <EmptyState
+                  title="No fue posible cargar la agenda"
+                  description={agendaError}
+                />
+              ) : agendaData?.reservas.length ? (
+                <div className="space-y-4">
+                  <div className="rounded-[1.75rem] border border-teal-200 bg-teal-50/80 px-5 py-4">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-teal-800">
+                      Fecha consultada
+                    </p>
+                    <p className="mt-2 text-sm font-medium text-teal-950">
+                      {formatAgendaDate(agendaData.fecha)}
+                    </p>
+                  </div>
+
+                  {agendaData.reservas.map((reservation) => (
+                    <article
+                      key={reservation.id}
+                      className="rounded-[1.75rem] border border-slate-200 bg-slate-50/80 p-5"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                            Bloque ocupado
+                          </p>
+                          <h3 className="mt-2 text-lg font-semibold text-slate-950">
+                            {reservation.horaInicio} - {reservation.horaFin}
+                          </h3>
+                        </div>
+                        <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold capitalize text-emerald-800">
+                          {reservation.estado}
+                        </span>
+                      </div>
+                      <p className="mt-4 text-sm font-medium text-slate-700">
+                        {reservation.motivo}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <EmptyState
+                  title="Sin reservas para este dia"
+                  description="No hay bloques ocupados para el espacio seleccionado en la fecha consultada."
+                />
+              )}
+            </div>
+          </article>
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-2">
           <div className="flex flex-col gap-6">
             <article className="rounded-[2rem] border border-slate-200 bg-white/90 p-6 shadow-[0_24px_80px_-40px_rgba(15,23,42,0.35)]">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
@@ -488,6 +644,8 @@ export default function ReservaPage() {
               </div>
             </article>
           </div>
+
+          <div className="hidden xl:block" />
         </section>
       </div>
     </main>

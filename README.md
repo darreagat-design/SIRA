@@ -1,12 +1,23 @@
-# SIRA - Sistema Inteligente de Reservas Academicas
+# SIRA - Sistema Inteligente de Reservas Académicas
 
-Aplicacion web academica para gestionar reservas de salones, laboratorios y auditorios.
+Aplicación web académica para gestionar reservas de salones, laboratorios y auditorios.
 
-## Objetivo academico
+## Objetivo académico
 
-SIRA fue desarrollado como proyecto academico para demostrar el ciclo completo de analisis, configuracion tecnica, persistencia, API e interfaz web de un sistema minimo de reservas academicas.
+SIRA fue desarrollado como proyecto académico para demostrar el ciclo completo de análisis, configuración técnica, persistencia, API e interfaz web de un sistema mínimo de reservas académicas.
 
-## Stack tecnologico
+## Funcionalidades implementadas
+
+- Registro de usuarios
+- Inicio de sesión
+- Listado de espacios activos
+- Consulta de disponibilidad por fecha y rango horario
+- Creación de reservas
+- Validación de traslape de horarios
+- Visualización de reservas registradas del usuario
+- Agenda diaria por espacio y fecha
+
+## Stack tecnológico
 
 - Next.js App Router
 - TypeScript
@@ -35,60 +46,69 @@ POSTGRES_PORT=5433
 DATABASE_URL="postgresql://sira_user:sira_password@localhost:5433/sira_db?schema=public"
 ```
 
-## Levantar PostgreSQL con Docker Compose
+## Puertos utilizados
 
-```bash
-docker compose up -d
-```
+- Aplicación web: `http://localhost:3001`
+- PostgreSQL: `5433`
 
-## Instalar dependencias
+## Pasos para ejecutar el proyecto
 
-```bash
-npm install
-```
+1. Levantar PostgreSQL con Docker Compose:
 
-## Ejecutar migraciones de Prisma
+   ```bash
+   docker compose up -d
+   ```
 
-```bash
-npx prisma migrate dev
-```
+2. Instalar dependencias:
 
-## Ejecutar el seed
+   ```bash
+   npm install
+   ```
 
-```bash
-npx prisma db seed
-```
+3. Ejecutar migraciones de Prisma:
 
-## Correr el proyecto en desarrollo
+   ```bash
+   npx prisma migrate dev
+   ```
 
-```bash
-npm run dev
-```
+4. Ejecutar el seed:
 
-Abre la aplicacion en el navegador en:
+   ```bash
+   npx prisma db seed
+   ```
 
-```text
-http://localhost:3001/
-```
+5. Iniciar la aplicación en modo desarrollo:
+
+   ```bash
+   npm run dev
+   ```
+
+6. Abrir la aplicación en el navegador en:
+
+   ```text
+   http://localhost:3001/
+   ```
 
 ## Endpoints disponibles
 
-- `POST /api/usuarios/register`
-- `POST /api/auth/login`
-- `GET /api/espacios`
-- `GET /api/disponibilidad`
-- `POST /api/reservas`
-- `GET /api/mis-reservas?usuarioId=...`
+- `POST /api/usuarios/register` - registrar un nuevo usuario
+- `POST /api/auth/login` - validar credenciales de acceso
+- `GET /api/espacios` - listar espacios activos
+- `GET /api/disponibilidad` - consultar disponibilidad por fecha y horario
+- `POST /api/reservas` - crear una nueva reserva
+- `GET /api/mis-reservas?usuarioId=...` - listar reservas del usuario autenticado
+- `GET /api/agenda-espacio?espacioId=...&fecha=...` - visualizar agenda diaria de un espacio
 
-## Flujo basico de uso
+## Flujo básico de uso
 
 1. Registrar un usuario desde `/register`.
-2. Iniciar sesion desde `/login`.
+2. Iniciar sesión desde `/login`.
 3. Entrar al dashboard y revisar espacios activos junto con las reservas registradas del usuario autenticado.
 4. Ir a `/reserva`.
-5. Consultar disponibilidad por fecha y horario.
-6. Crear una reserva valida.
-7. Cerrar sesion desde el encabezado.
+5. Seleccionar espacio y fecha para ver la agenda diaria con horarios ya ocupados.
+6. Consultar disponibilidad para el rango horario deseado.
+7. Crear una reserva válida.
+8. Cerrar sesión desde el encabezado.
 
 ## Estructura general del proyecto
 
@@ -115,18 +135,19 @@ http://localhost:3001/
 
 - Registrar un usuario nuevo desde la UI.
 - Intentar registrar un correo repetido.
-- Iniciar sesion con credenciales correctas.
-- Intentar login con password incorrecta.
+- Iniciar sesión con credenciales correctas.
+- Intentar login con contraseña incorrecta.
 - Listar espacios activos en el dashboard.
 - Ver reservas registradas del usuario dentro del dashboard.
+- Visualizar la agenda diaria de un espacio en la pantalla de reserva.
 - Consultar disponibilidad para una fecha y un rango horario.
-- Crear una reserva valida.
+- Crear una reserva válida.
 - Intentar crear una reserva traslapada para verificar el conflicto.
 - Verificar que `/dashboard` y `/reserva` redirigen a `/login` cuando no hay usuario en `sessionStorage`.
 
-## Notas finales
+## Consideraciones técnicas
 
-- La sesion se maneja de forma simple con `sessionStorage`.
+- La sesión se maneja de forma simple con `sessionStorage`.
 - No se usa JWT, cookies ni middleware complejo.
 - PostgreSQL usa el puerto `5433` para evitar conflictos con instalaciones locales en `5432`.
-- El proyecto queda listo para pruebas manuales, demostracion y defensa en clase.
+- El proyecto está orientado a pruebas manuales, demostración académica y defensa en clase.
