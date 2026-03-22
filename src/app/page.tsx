@@ -4,15 +4,15 @@ export default function Home() {
       <section className="w-full max-w-4xl rounded-[2rem] border border-slate-200 bg-white/90 p-8 shadow-[0_24px_80px_-36px_rgba(15,23,42,0.35)] backdrop-blur sm:p-12">
         <div className="mb-10 space-y-4">
           <span className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-            Sprint 2
+            Sprint 3
           </span>
           <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-slate-950 sm:text-5xl">
-            SIRA deja lista su capa de persistencia inicial.
+            SIRA deja lista la API base del MVP.
           </h1>
           <p className="max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-            Esta aplicacion mantiene la base tecnica del proyecto y ahora suma
-            el modelado de datos con Prisma, la migracion inicial y un seed con
-            espacios academicos de ejemplo para continuar en el siguiente sprint.
+            Esta aplicacion mantiene la base tecnica y de persistencia del
+            proyecto, y ahora suma endpoints para registro, login, espacios,
+            disponibilidad y reservas con validaciones reutilizables.
           </p>
         </div>
 
@@ -22,10 +22,10 @@ export default function Home() {
               Incluido en este sprint
             </h2>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
-              <li>Modelos Prisma para Usuario, Espacio y Reserva.</li>
-              <li>Migracion inicial lista para la base de datos.</li>
-              <li>Seed con espacios academicos de ejemplo.</li>
-              <li>PostgreSQL en Docker Compose para desarrollo local.</li>
+              <li>Registro de usuarios con password hash usando bcrypt.</li>
+              <li>Login basico sin JWT ni cookies.</li>
+              <li>Consulta de espacios activos y disponibilidad.</li>
+              <li>Creacion de reservas con validacion de conflicto horario.</li>
             </ul>
           </article>
 
@@ -34,10 +34,10 @@ export default function Home() {
               Fuera de alcance por ahora
             </h2>
             <ul className="mt-4 space-y-3 text-sm leading-6 text-slate-600">
-              <li>Sin modelos de negocio finales en Prisma.</li>
-              <li>Sin autenticacion ni endpoints funcionales.</li>
-              <li>Sin pantallas de login, dashboard o reservas.</li>
-              <li>Sin logica de disponibilidad o doble reserva.</li>
+              <li>Sin interfaz funcional completa del sistema.</li>
+              <li>Sin JWT, cookies ni middleware de autenticacion.</li>
+              <li>Sin dashboard, login visual o flujo de reserva en UI.</li>
+              <li>Sin funcionalidades del Sprint 4.</li>
             </ul>
           </article>
         </div>

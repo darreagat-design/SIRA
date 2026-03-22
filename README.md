@@ -1,34 +1,19 @@
-# SIRA - Sprint 2
+# SIRA - Sprint 3
 
-Base tecnica y capa de persistencia inicial de SIRA (Sistema Inteligente de Reservas Academicas).
+API base del MVP de SIRA (Sistema Inteligente de Reservas Academicas).
 
-Este sprint deja modeladas las entidades principales del sistema con Prisma, la migracion inicial de base de datos y un seed con espacios academicos de ejemplo. No incluye endpoints funcionales, autenticacion ni pantallas de negocio.
+Este sprint incorpora endpoints con Next.js App Router para registro de usuarios, login, consulta de espacios activos, consulta de disponibilidad y creacion de reservas. La validacion se realiza con Zod y las contrasenas se almacenan con hash usando bcrypt. No incluye JWT, cookies, middleware de autenticacion ni pantallas funcionales completas.
 
 ## Stack
 
-- Next.js
+- Next.js App Router
 - TypeScript
 - Tailwind CSS
 - Prisma ORM
 - PostgreSQL
 - Docker Compose
-
-## Estructura base
-
-```text
-.
-|- docker-compose.yml
-|- .env.example
-|- prisma/
-|  |- migrations/
-|  |- schema.prisma
-|  |- seed.ts
-|- src/
-|  |- app/
-|  |- components/
-|  |- lib/
-|     |- prisma.ts
-```
+- Zod
+- bcrypt
 
 ## Levantar el entorno local
 
@@ -50,54 +35,47 @@ En Windows PowerShell:
 Copy-Item .env.example .env
 ```
 
-3. Levanta PostgreSQL con Docker Compose:
+3. Levanta PostgreSQL:
 
 ```bash
 docker compose up -d
 ```
 
-4. Valida Prisma y genera el cliente:
+4. Ejecuta migraciones:
 
 ```bash
-npx prisma validate
+npx prisma migrate dev
+```
+
+5. Genera Prisma Client:
+
+```bash
 npx prisma generate
 ```
 
-5. Crea o aplica la migracion inicial:
-
-```bash
-npx prisma migrate dev --name init
-```
-
-6. Ejecuta el seed de espacios academicos:
+6. Carga el seed de espacios academicos:
 
 ```bash
 npx prisma db seed
 ```
 
-Tambien puedes usar el script:
-
-```bash
-npm run db:seed
-```
-
-7. Inicia el proyecto en desarrollo:
+7. Inicia el proyecto:
 
 ```bash
 npm run dev
 ```
 
-## Modelos incluidos en Sprint 2
+## Endpoints disponibles en Sprint 3
 
-- `Usuario`
-- `Espacio`
-- `Reserva`
+- `POST /api/usuarios/register`
+- `POST /api/auth/login`
+- `GET /api/espacios`
+- `GET /api/disponibilidad?fecha=2026-03-25&horaInicio=09:00&horaFin=11:00`
+- `POST /api/reservas`
 
-## Notas del Sprint 2
+## Notas
 
-- `correo` en `Usuario` es unico.
-- `Espacio.activo` se modela como booleano.
-- `Reserva.estado` tiene valor por defecto `confirmada`.
-- `horaInicio` y `horaFin` se mantienen como `String` para este MVP.
-- El ejemplo usa el puerto `5433` para evitar conflictos con instalaciones locales de PostgreSQL en `5432`.
-- El seed crea espacios de ejemplo y deja la base lista para construir la API en el siguiente sprint.
+- La API espera horas en formato `HH:mm`.
+- La fecha para disponibilidad y reservas usa el formato `YYYY-MM-DD`.
+- El contenedor PostgreSQL usa el puerto `5433` para evitar conflictos con instalaciones locales en `5432`.
+- Este sprint deja la base lista para construir la interfaz en el Sprint 4.
